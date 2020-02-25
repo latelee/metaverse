@@ -1,6 +1,8 @@
 # arm 平台交叉编译脚本
 # TODO：兼容x86(32 & 64 bit)
-# 
+# docker最低版本：docker 17.05.0-ce
+# 内核版本 4.8以上
+#
 #!/bin/bash
 set -e
 
@@ -25,6 +27,12 @@ usage() {
     echo "$0 arm | arm64"
 }
 
+myexit() {
+    echo "error exit at:"
+    date
+    exit 0
+}
+
 prepare_qemu(){
     sudo apt-get install qemu-user-static
 }
@@ -47,11 +55,12 @@ docker_prepare(){
 
 docker_build(){
     echo "setting env..."
-    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes  || exit 0
+    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes  || myexit
     echo "building..."
-    docker build -t metaverse -f Dockerfile.cross --build-arg BUILD_FROM=$ARCH .  || exit 0
+    docker build -t metaverse -f Dockerfile.cross --build-arg BUILD_FROM=$ARCH .  || myexit
     
-    docker run -d --rm --name foobar metaverse || exit 0
+    echo "copying..."
+    docker run -d --rm --name foobar metaverse || myexit
     mkdir -p output
     docker cp metaverse:/usr/local/lib output
     docker cp metaverse:/usr/local/bin output

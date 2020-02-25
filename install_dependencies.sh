@@ -628,6 +628,14 @@ build_from_tarball_boost()
     create_directory "$EXTRACT"
     push_directory "$EXTRACT"
 
+    # return if already compiled
+    if [ -f $BUILD_FILE ];then
+        echo "already build, skip..."
+        pop_directory
+        pop_directory
+        return
+    fi
+    
     if [ ! -f $ARCHIVE ];then
         # Extract the source locally.
         wget -c --output-document $ARCHIVE $URL
@@ -694,6 +702,8 @@ build_from_tarball_boost()
         "--reconfigure" \
         "--prefix=$PREFIX" \
         "$@"
+
+    touch $BUILD_FILE
 
     pop_directory
     pop_directory
