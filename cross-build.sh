@@ -1,12 +1,11 @@
-# arm 平台交叉编译脚本
-# TODO：兼容x86(32 & 64 bit)
-# docker最低版本：docker 17.05.0-ce
-# 内核版本 4.8以上
-#
+# cross comiple for arm using Docker Late Lee<li@latelee.org>
+# 
+# docker >= 17.05.0-ce
+# host kernel >= 4.8
+# TODO: build arm & x86 in one script file
+
 #!/bin/bash
 set -e
-
-QEMU_VERSION="${QEMU_VERSION:-v3.0.0}"
 
 ARCH=arm32v7 # arm64v8
 
@@ -16,10 +15,15 @@ if [[ $# != 1 ]]; then
     exit
 fi
 
+echo "begin at"
+date 
+
 docker_prepare $@
 
 docker_build
 
+echo "finish at"
+date
 }
 
 usage() {
@@ -61,9 +65,9 @@ docker_build(){
     
     echo "copying..."
     docker run -d --rm --name foobar metaverse || myexit
-    mkdir -p output
-    docker cp metaverse:/usr/local/lib output
-    docker cp metaverse:/usr/local/bin output
+    rm -rf output && mkdir -p output
+    docker cp foobar:/usr/local/lib output
+    docker cp foobar:/usr/local/bin output
     docker rm -f foobar
     
     echo "Done"

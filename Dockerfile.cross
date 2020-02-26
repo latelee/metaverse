@@ -23,7 +23,7 @@ ENV IS_TRAVIS_LINUX 1
 RUN cd /tmp/metaverse && /bin/bash install_dependencies.sh --build-arm --build-boost --build-upnpc
 
 RUN cd /tmp/metaverse \
-  && mkdir -p build && cd build && cmake .. && make && make install \
+  && mkdir -p build && cd build && cmake .. && make -j2 && make install \
   && rm -rf /tmp/metaverse/build \
   && rm -rf /tmp/metaverse/build-mvs-dependencies
 
