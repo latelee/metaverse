@@ -7,19 +7,19 @@
 #!/bin/bash
 set -e
 
-ARCH=arm32v7 # arm64v8
+ARCH=arm64v8 #arm32v7
 
 main(){
-if [[ $# != 1 ]]; then
-    usage
-    exit
-fi
+#if [[ $# != 1 ]]; then
+#    usage
+#    exit
+#fi
 
 echo "begin at"
 date 
 
-docker_prepare $@
-
+docker_prepare arm64
+exit
 docker_build
 
 echo "finish at"
