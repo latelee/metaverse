@@ -10,6 +10,11 @@ set -e
 ARCH=arm64v8 #arm32v7
 
 main(){
+if [ `whoami` != "root" ];then
+    echo "please using root"
+    exit
+fi
+
 #if [[ $# != 1 ]]; then
 #    usage
 #    exit
@@ -58,8 +63,14 @@ docker_prepare(){
 }
 
 docker_build(){
+    if [[ ! -f /usr/bin/qemu-aarch64-static ]]; then
+    echo "install qemu..."
+    apt-get install qemu-user-static -y
+    fi
+
     echo "setting env..."
-    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes  || myexit
+    
+    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes || myexit
     echo "building..."
     docker build -t metaverse -f Dockerfile.cross --build-arg BUILD_FROM=$ARCH .  || myexit
     

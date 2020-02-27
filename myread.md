@@ -1,11 +1,18 @@
 
 Cross compile mvs using Docker
 
-## version
-linux kerne and docker version:
+you nned to change to **root** when executing the flowing command.
+
+## env
+check versin first, linux kerne and docker version:
 ```
 host docker >= 17.05.0-ce
 host kernel >= 4.8
+```
+
+install qemu:
+```
+apt-get install qemu-user-staic
 ```
 
 ## way1
