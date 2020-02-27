@@ -1,5 +1,11 @@
 交叉编译说明
 
+版本要求：  
+```
+host docker >= 17.05.0-ce
+host kernel >= 4.8
+```
+
 ## 从头构建
 ```
 ./cross-build.sh arm
@@ -55,3 +61,5 @@ docker cp arm64:/usr/local/bin .
 start at ~ 2.25 13:20
 finish at ~ 2.26 17:00
 ```
+
+nohup bash cross-build.sh arm &
