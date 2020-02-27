@@ -1,65 +1,66 @@
-交叉编译说明
 
-版本要求：  
+Cross compile mvs using Docker
+
+## version
+linux kerne and docker version:
 ```
 host docker >= 17.05.0-ce
 host kernel >= 4.8
 ```
 
-## 从头构建
+## way1
+Clone the mvs source.  
+then enter mvs source directory, then run:  
 ```
-./cross-build.sh arm
-or
-./cross-build.sh arm64
+./cross-build.sh // form arm 64 (eg: aarch64, armv8(and abover))
 ```
-成功后，程序和依赖库位于当前目录 output 目录。  
+When everything ok, the binary file and .so/.a file will be found in output directory.
 
-## 使用编译环境镜像
-下载编译环境镜像：
+## way2
+Clone the mvs source.  
+then enter mvs source directory.
+
+pull docker image(with built library):
 ```
-docker pull latelee/mvs:arm32
-or
 docker pull latelee/mvs:arm64
 ```
-注：该镜像的头文件和库在 /usr/local 目录下。  
+the head file(eg, boost), and share file(eg, libxxx.so) locate in /usr/local .
 
-运行容器，执行：
+run the docker image:
 ```
-docker run -itd --name arm latelee/mvs:arm32 
-or
 docker run -itd --name arm64 latelee/mvs:arm64 
 ```
 
-拷贝工程：
+copy mvs source: 
 ```
-docker cp . arm/tmp
-or
-docker cp . arm64/tmp
+docker cp ../metaverse/  arm64:/tmp
 ```
 
-进入容器并编译(为arm64为例）：
+go into container(arm64 for example):
 ```
 docker exec -it arm64 bash
 cd /tmp/metaverse
 mkdir -p build && cd build && cmake .. && make -j2 && make install
 ```
-
-编译好的文件位于 /usr/local/bin 目录。  
-退出容器：
+When everything ok, mvsd file will be found in /usr/local/bin .
+exit container:
 ```
 exit
 ```
-拷贝生成的文件：
+then copy the file: 
 ```
 docker cp arm64:/usr/local/lib .
 docker cp arm64:/usr/local/bin .
 ```
 
-## 其它
-阿里云主机，1核心2GB：  
+## other
+1 cpu core, 2GB memory host, build time:  
 ```
 start at ~ 2.25 13:20
 finish at ~ 2.26 17:00
 ```
-
-nohup bash cross-build.sh arm &
+when you need run script background, run:
+```
+nohup bash cross-build.sh &
+```
+check nohup.out for log information.

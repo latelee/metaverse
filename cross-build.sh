@@ -19,7 +19,7 @@ echo "begin at"
 date 
 
 docker_prepare arm64
-exit
+
 docker_build
 
 echo "finish at"
